@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>just for fun</title>
+		<script src="js/echarts.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/map/China.js"></script>
+		<style>		
+			#div_graph {
+				margin-left: 10%;
+				width: 800px;
+				height: 600px;
+			}
+		</style>
+    </head>
+    <body>
+		<p style="margin-left: 20%">
+			<input type="text" id="input_con" placeholder="输入去过的省份，以中文逗号分隔" style="width:600px">
+			<input type="button" id="confirm" value="确认">
+		</p>
+        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+        <div id="div_graph"></div>
+		<script>
+			$(document).ready(function(){
+				function show_map(data){
+					var chart = echarts.init(document.getElementById("div_graph"));
+					var option = {
+						tooltip: {},
+						visualMap: {
+							//不显示组件，但是功能还在
+							show: false,
+							min: 0,
+							max: 1500,
+							left: 'left',
+							top: 'bottom',
+							//text: ['High','Low'],
+							seriesIndex: [0],
+							inRange: {
+								color: ['#006edd', '#e0ffff']
+							},
+							//是否显示拖拽手柄
+							//calculable : true
+						},
+						geo: {
+							map: '全国',
+							roam: true,
+							label: {
+								normal: {
+									show: true,
+									textStyle: {
+										color: 'rgba(0,0,0,0.4)'
+									}
+								}
+							},
+							itemStyle: {
+								normal:{
+									borderColor: 'rgba(0, 0, 0, 0.2)'
+								},
+								emphasis:{
+									color: null,
+									areaColor: null,
+									shadowOffsetX: 0,
+									shadowOffsetY: 0,
+									shadowBlur: 20,
+									borderWidth: 0,
+									shadowColor: 'rgba(0, 0, 0, 0.5)'
+								}
+							}
+						},
+						series: [
+							{
+								name: 'footprint',
+								type: 'map',
+								geoIndex: 0,
+								data: data,
+							},
+						]
+					};
+					chart.setOption(option);
+				};
+				
+				show_map([]);
+				$("#confirm").on("click", function(){
+					var data = [];
+					var input_con = $("#input_con").val().split("，");
+					//海南，广东，湖南，湖北，河南，北京，辽宁，吉林，黑龙江，江西，上海，江苏，陕西
+					for(var i=0; i<input_con.length; i++){
+						data.push({name: input_con[i], value: 1000});
+					};
+					show_map(data);
+				})
+			})
+		</script>
+        </div>
+    </body>
+</html>
